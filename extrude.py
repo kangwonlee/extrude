@@ -64,6 +64,27 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
     return exij, eyij, ax
 
 
+def axis_equal_xy(exij, eyij):
+    # Extremums in x, y coordinates
+    x_min, x_max = min(exij.flatten().tolist()[0]), max(exij.flatten().tolist()[0])
+    y_min, y_max = min(eyij.flatten().tolist()[0]), max(eyij.flatten().tolist()[0])
+
+    # x, y span
+    delta_x = x_max - x_min
+    delta_y = y_max - y_min
+
+    # center of x, y coordinate
+    center_x = (x_max + x_min) * 0.5
+    center_y = (y_max + y_min) * 0.5
+
+    # choose the larger of the half spans
+    half_delta = max([delta_x, delta_y]) * 0.5
+
+    # set axis ranges
+    plt.xlim((center_x - half_delta, center_x + half_delta))
+    plt.ylim((center_y - half_delta, center_y + half_delta))
+
+
 def main():
 
     t = np.arange(0, 10.01, 0.1)
@@ -85,19 +106,7 @@ def main():
 
     exij, eyij, ax = extrude(t, x, y, heading_deg, footprint_x, footprint_y)
 
-    x_min, x_max = min(exij.flatten().tolist()[0]), max(exij.flatten().tolist()[0])
-    y_min, y_max = min(eyij.flatten().tolist()[0]), max(eyij.flatten().tolist()[0])
-
-    delta_x = x_max - x_min
-    delta_y = y_max - y_min
-
-    center_x = (x_max + x_min) * 0.5
-    center_y = (y_max + y_min) * 0.5
-
-    half_delta = max([delta_x, delta_y]) * 0.5
-
-    plt.xlim((center_x - half_delta, center_x + half_delta))
-    plt.ylim((center_y - half_delta, center_y + half_delta))
+    axis_equal_xy(exij, eyij)
 
     # https://stackoverflow.com/questions/12904912/how-to-set-camera-position-for-3d-plots-using-python-matplotlib
     ax.view_init(elev=50., azim=-60)
