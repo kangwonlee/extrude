@@ -13,4 +13,18 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
 
     footprint_x : footprint x coordinates w. r. t. (0, 0)
     footprint_y : footprint y coordinates w. r. t. (0, 0)
+
+    Example
+    =======
+    >>> import numpy as np
+    >>> l_m = 4.8
+    >>> w_m = 1.83
+    >>> l_half_m = l_m * 0.5
+    >>> w_half_m = w_m * 0.5
+    >>> footprint_x, footprint_y = zip((l_m, w_half_m), (-l_m, w_half_m), (-l_m, -w_half_m), (l_m, -w_half_m), (l_m, w_half_m))
+    >>> t = np.arange(0, 10.01, 0.1)
+    >>> x = np.arange(0, len(t)+0.1)
+    >>> y = np.zeros_like(t)
+    >>> heading_deg = np.linspace(0, 60, len(t))
+
     """
