@@ -64,6 +64,38 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
     return exij, eyij, ax
 
 
+def constant_radius_turning(t_max_sec, theta_deg, R_m, t_sample_sec=0.1):
+    """
+    Generate reference trajectory of constant radius turning centered at (0, 0), starting at (R, 0)
+
+    Arguments
+    =========
+    t_max_sec : Max time
+    theta_deg : Max turning angle
+    R_m : Turning radius
+    t_sample_sec : Sampling time
+
+    Return Values
+    =============
+    t_sec_array : Time steps
+    x_m_array : X coordinates
+    y_m_array : Y coordinates
+    Heading_deg_array : Heading angle
+    """
+
+    t = np.arange(0, t_max_sec + t_sample_sec * 0.5, t_sample_sec)
+
+    # Angle arrays
+    theta_deg_array = np.linspace(0, theta_deg, len(t))
+    theta_rad_array = np.deg2rad(theta_deg_array)
+
+    # Reference coordinates
+    x = R_m * np.cos(theta_rad_array)
+    y = R_m * np.sin(theta_rad_array)
+
+    return t, x, y, theta_deg_array
+
+
 def axis_equal_xy(exij, eyij):
     # Extremums in x, y coordinates
     x_min, x_max = min(exij.flatten().tolist()[0]), max(exij.flatten().tolist()[0])
@@ -87,16 +119,11 @@ def axis_equal_xy(exij, eyij):
 
 def main():
 
-    t = np.arange(0, 10.01, 0.1)
-
+    t_max = 10
     theta_deg = 135
-    theta_deg_array = np.linspace(0, theta_deg, len(t))
-    theta_rad_array = np.deg2rad(theta_deg_array)
     R_m = 10
 
-    x = R_m * np.cos(theta_rad_array)
-    y = R_m * np.sin(theta_rad_array)
-    heading_deg = np.linspace(0, theta_deg, len(t))
+    t, x, y, heading_deg = constant_radius_turning(t_max, theta_deg, R_m)
 
     l_m = 4.8
     w_m = 1.83
