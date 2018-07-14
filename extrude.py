@@ -67,9 +67,15 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
 def main():
 
     t = np.arange(0, 10.01, 0.1)
-    x = np.linspace(0, 20, len(t))
-    y = np.zeros_like(t)
-    heading_deg = np.linspace(0, 135, len(t))
+
+    theta_deg = 135
+    theta_deg_array = np.linspace(0, theta_deg, len(t))
+    theta_rad_array = np.deg2rad(theta_deg_array)
+    R_m = 10
+
+    x = R_m * np.cos(theta_rad_array)
+    y = R_m * np.sin(theta_rad_array)
+    heading_deg = np.linspace(0, theta_deg, len(t))
 
     l_m = 4.8
     w_m = 1.83
