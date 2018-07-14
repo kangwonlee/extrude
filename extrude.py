@@ -28,3 +28,6 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
     >>> heading_deg = np.linspace(0, 60, len(t))
 
     """
+
+    foot_x, foot_y = np.array(footprint_x), np.array(footprint_y)
+    h_rad = np.deg2rad(h_deg)
