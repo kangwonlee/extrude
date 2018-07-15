@@ -138,9 +138,8 @@ def main():
 
     l_m = 4.8
     w_m = 1.83
-    footprint_x, footprint_y = get_rect_footprint(l_m, w_m)
 
-    exij, eyij, ax = extrude(t, x, y, heading_deg, footprint_x, footprint_y)
+    exij, eyij, ax = extrude(t, x, y, heading_deg, l_m, w_m)
 
     axis_equal_xy(exij, eyij)
 
