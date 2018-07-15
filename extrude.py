@@ -134,9 +134,7 @@ def main():
 
     l_m = 4.8
     w_m = 1.83
-    l_half_m = l_m * 0.5
-    w_half_m = w_m * 0.5
-    footprint_x, footprint_y = zip((l_half_m, w_half_m), (-l_half_m, w_half_m), (-l_half_m, -w_half_m), (l_half_m, -w_half_m), (l_half_m, w_half_m))
+    footprint_x, footprint_y = get_rect_footprint(l_m, w_m)
 
     exij, eyij, ax = extrude(t, x, y, heading_deg, footprint_x, footprint_y)
 
