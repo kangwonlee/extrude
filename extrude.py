@@ -64,6 +64,13 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
     return exij, eyij, ax
 
 
+def get_rect_footprint(l_m, w_m):
+    l_half_m = l_m * 0.5
+    w_half_m = w_m * 0.5
+    footprint_x, footprint_y = zip((l_half_m, w_half_m), (-l_half_m, w_half_m), (-l_half_m, -w_half_m), (l_half_m, -w_half_m), (l_half_m, w_half_m))
+    return footprint_x, footprint_y
+
+
 def constant_radius_turning(t_max_sec, theta_deg, R_m, t_sample_sec=0.1):
     """
     Generate reference trajectory of constant radius turning centered at (0, 0), starting at (R, 0)
