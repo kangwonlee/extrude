@@ -41,6 +41,10 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
     heading_rad = np.deg2rad(h_deg)
 
     # Foot print relative coordinate
+
+    if isinstance(footprint_x, (int, float)) and isinstance(footprint_y, (int, float)):
+        footprint_x, footprint_y = get_rect_footprint(footprint_x, footprint_y)
+
     fx_vec = np.matrix([footprint_x])
     fy_vec = np.matrix([footprint_y])
 
