@@ -133,14 +133,14 @@ def axis_equal_xy(exij, eyij):
 
 def main():
 
+    l_m = 4.8
+    w_m = 1.83
+
     t_max = 10
     theta_deg = 90
     R_m = 20
 
     t, x, y, heading_deg = constant_radius_turning(t_max, theta_deg, R_m)
-
-    l_m = 4.8
-    w_m = 1.83
 
     exij, eyij, ax = extrude(t, x, y, heading_deg, l_m, w_m)
 
