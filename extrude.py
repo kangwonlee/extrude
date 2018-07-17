@@ -150,10 +150,16 @@ def main():
 
     t2, x2, y2, heading_deg2 = constant_radius_turning(t_max, R_m, initial_angle_deg=90, final_angle_deg=90)
     x2 += R_m
-    exij2, eyij2, _ = extrude(t2, x2, y2, heading_deg2, l_m, w_m, ax=ax)
+    exij2, eyij2, _ = extrude(t2, x2, y2, heading_deg2, l_m, w_m, ax=ax, color='green')
 
-    exij3, eyij3, _ = helix(l_m, w_m, t_max, R_m, start_deg=180, end_deg=90, ax=ax)
-    exij4, eyij4, _ = helix(l_m, w_m, t_max, R_m, start_deg=270, end_deg=90, ax=ax)
+    t3, x3, y3, heading_deg3 = constant_radius_turning(t_max, R_m, initial_angle_deg=180, final_angle_deg=90)
+    x3 += R_m
+    y3 += R_m
+    exij3, eyij3, _ = extrude(t3, x3, y3, heading_deg3, l_m, w_m, ax=ax, color='red')
+
+    t4, x4, y4, heading_deg4 = constant_radius_turning(t_max, R_m, initial_angle_deg=270, final_angle_deg=90)
+    y4 += R_m
+    exij4, eyij4, _ = extrude(t4, x4, y4, heading_deg4, l_m, w_m, ax=ax, color='blue')
 
     exij = np.hstack((exij0, exij2, exij3, exij4,))
     eyij = np.hstack((eyij0, eyij2, eyij3, eyij4,))
