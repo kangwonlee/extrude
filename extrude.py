@@ -141,10 +141,10 @@ def main():
     t_max = 10
     R_m = 20
 
-    exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=90,)
-    exij2, eyij2, _ = helix(l_m, w_m, t_max, R_m, start_deg=90, end_deg=90, ax=ax)
-    exij3, eyij3, _ = helix(l_m, w_m, t_max, R_m, start_deg=180, end_deg=90, ax=ax)
-    exij4, eyij4, _ = helix(l_m, w_m, t_max, R_m, start_deg=270, end_deg=90, ax=ax)
+    exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=150,)
+    exij2, eyij2, _ = helix(l_m, w_m, t_max, R_m, start_deg=90, end_deg=150, ax=ax)
+    exij3, eyij3, _ = helix(l_m, w_m, t_max, R_m, start_deg=180, end_deg=150, ax=ax)
+    exij4, eyij4, _ = helix(l_m, w_m, t_max, R_m, start_deg=270, end_deg=150, ax=ax)
 
     exij = np.hstack((exij0, exij2, exij3, exij4,))
     eyij = np.hstack((eyij0, eyij2, eyij3, eyij4,))
