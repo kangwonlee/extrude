@@ -146,9 +146,9 @@ def main():
     # https://stackoverflow.com/questions/12904912/how-to-set-camera-position-for-3d-plots-using-python-matplotlib
     ax.view_init(elev=50., azim=-60)
 
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_zlabel('t')
+    ax.set_xlabel('x(m)')
+    ax.set_ylabel('y(m)')
+    ax.set_zlabel('t(sec)')
 
     filename = 'surface.svg'
     print(filename)
