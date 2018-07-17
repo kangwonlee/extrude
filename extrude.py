@@ -150,12 +150,12 @@ def main():
 
     t2, x2, y2, heading_deg2 = constant_radius_turning(t_max, R_m, initial_angle_deg=90, final_angle_deg=90)
     x2 += R_m
-    exij2, eyij2, _ = extrude(t2, x2, y2, heading_deg2, l_m, w_m, ax=ax, color='green')
+    exij2, eyij2, _ = extrude(t2, x2, y2, heading_deg2, l_m, w_m, ax=ax, color='red')
 
     t3, x3, y3, heading_deg3 = constant_radius_turning(t_max, R_m, initial_angle_deg=180, final_angle_deg=90)
     x3 += R_m
     y3 += R_m
-    exij3, eyij3, _ = extrude(t3, x3, y3, heading_deg3, l_m, w_m, ax=ax, color='red')
+    exij3, eyij3, _ = extrude(t3, x3, y3, heading_deg3, l_m, w_m, ax=ax, color='green')
 
     t4, x4, y4, heading_deg4 = constant_radius_turning(t_max, R_m, initial_angle_deg=270, final_angle_deg=90)
     y4 += R_m
@@ -166,8 +166,11 @@ def main():
 
     axis_equal_xy(exij, eyij)
 
+    azim = (0.46875+15.234375)*0.5
+    print('axim =', azim)
+
     # https://stackoverflow.com/questions/12904912/how-to-set-camera-position-for-3d-plots-using-python-matplotlib
-    ax.view_init(elev=30., azim=-60)
+    ax.view_init(elev=30., azim=azim)
 
     ax.set_xlabel('x(m)')
     ax.set_ylabel('y(m)')
