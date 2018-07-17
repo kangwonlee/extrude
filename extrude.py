@@ -100,11 +100,14 @@ def constant_radius_turning(t_max_sec, theta_deg, R_m, t_sample_sec=0.1):
     theta_deg_array = np.linspace(0, theta_deg, len(t))
     theta_rad_array = np.deg2rad(theta_deg_array)
 
+    # Heading angle in degree
+    heading_deg_array = 90 + theta_deg_array
+
     # Reference coordinates
     x = R_m * np.cos(theta_rad_array)
     y = R_m * np.sin(theta_rad_array)
 
-    return t, x, y, theta_deg_array
+    return t, x, y, heading_deg_array
 
 
 def axis_equal_xy(exij, eyij):
@@ -131,8 +134,8 @@ def axis_equal_xy(exij, eyij):
 def main():
 
     t_max = 10
-    theta_deg = 135
-    R_m = 10
+    theta_deg = 90
+    R_m = 20
 
     t, x, y, heading_deg = constant_radius_turning(t_max, theta_deg, R_m)
 
@@ -144,7 +147,7 @@ def main():
     axis_equal_xy(exij, eyij)
 
     # https://stackoverflow.com/questions/12904912/how-to-set-camera-position-for-3d-plots-using-python-matplotlib
-    ax.view_init(elev=50., azim=-60)
+    ax.view_init(elev=30., azim=-60)
 
     ax.set_xlabel('x(m)')
     ax.set_ylabel('y(m)')
