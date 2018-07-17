@@ -75,16 +75,17 @@ def get_rect_footprint(l_m, w_m):
     return footprint_x, footprint_y
 
 
-def constant_radius_turning(t_max_sec, theta_deg, R_m, t_sample_sec=0.1):
+def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=0, final_angle_deg=90,):
     """
     Generate reference trajectory of constant radius turning centered at (0, 0), starting at (R, 0)
 
     Arguments
     =========
     t_max_sec : Max time
-    theta_deg : Max turning angle
     R_m : Turning radius
     t_sample_sec : Sampling time
+    initial_angle_deg : Start point angle
+    final_angle_deg : End point angle
 
     Return Values
     =============
@@ -97,7 +98,7 @@ def constant_radius_turning(t_max_sec, theta_deg, R_m, t_sample_sec=0.1):
     t = np.arange(0, t_max_sec + t_sample_sec * 0.5, t_sample_sec)
 
     # Angle arrays
-    theta_deg_array = np.linspace(0, theta_deg, len(t))
+    theta_deg_array = np.linspace(initial_angle_deg, initial_angle_deg+final_angle_deg, len(t))
     theta_rad_array = np.deg2rad(theta_deg_array)
 
     # Heading angle in degree
@@ -139,8 +140,7 @@ def main():
     t_max = 10
     theta_deg = 90
     R_m = 20
-
-    t, x, y, heading_deg = constant_radius_turning(t_max, theta_deg, R_m)
+    t, x, y, heading_deg = constant_radius_turning(t_max, R_m, final_angle_deg=theta_deg)
 
     exij, eyij, ax = extrude(t, x, y, heading_deg, l_m, w_m)
 
