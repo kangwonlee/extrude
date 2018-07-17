@@ -141,10 +141,14 @@ def main():
     t_max = 10
     R_m = 20
 
-    exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=150,)
-    exij2, eyij2, _ = helix(l_m, w_m, t_max, R_m, start_deg=90, end_deg=150, ax=ax)
-    exij3, eyij3, _ = helix(l_m, w_m, t_max, R_m, start_deg=180, end_deg=150, ax=ax)
-    exij4, eyij4, _ = helix(l_m, w_m, t_max, R_m, start_deg=270, end_deg=150, ax=ax)
+    exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=90,)
+
+    t2, x2, y2, heading_deg2 = constant_radius_turning(t_max, R_m, initial_angle_deg=90, final_angle_deg=90)
+    x2 += R_m
+    exij2, eyij2, _ = extrude(t2, x2, y2, heading_deg2, l_m, w_m, ax=ax)
+
+    exij3, eyij3, _ = helix(l_m, w_m, t_max, R_m, start_deg=180, end_deg=90, ax=ax)
+    exij4, eyij4, _ = helix(l_m, w_m, t_max, R_m, start_deg=270, end_deg=90, ax=ax)
 
     exij = np.hstack((exij0, exij2, exij3, exij4,))
     eyij = np.hstack((eyij0, eyij2, eyij3, eyij4,))
