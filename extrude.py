@@ -3,7 +3,7 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7):
+def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None):
     """
     Extrude footprint along the x y t coordinates
 
@@ -60,8 +60,9 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7):
     tij = t_vec * one_vec
 
     # plot
-    fig = plt.figure(figsize=(10, 10))
-    ax = fig.add_subplot(111, projection='3d')
+    if ax is None:
+        fig = plt.figure(figsize=(10, 10))
+        ax = fig.add_subplot(111, projection='3d')
 
     # https://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
     ax.plot_surface(exij, eyij, tij, alpha=alpha)
