@@ -144,9 +144,7 @@ def main():
     start_deg = 0
     end_deg = 90
 
-    t, x, y, heading_deg = constant_radius_turning(t_max, R_m, initial_angle_deg=start_deg, final_angle_deg=end_deg)
-
-    exij, eyij, ax = extrude(t, x, y, heading_deg, l_m, w_m)
+    exij, eyij, ax = helix(l_m, w_m, t_max, R_m, start_deg, end_deg,)
 
     axis_equal_xy(exij, eyij)
 
@@ -160,6 +158,13 @@ def main():
     filename = 'surface.svg'
     print(filename)
     plt.savefig(filename)
+
+
+def helix(l_m, w_m, t_max, R_m, start_deg, end_deg,):
+    t, x, y, heading_deg = constant_radius_turning(t_max, R_m, initial_angle_deg=start_deg, final_angle_deg=end_deg)
+
+    exij, eyij, ax = extrude(t, x, y, heading_deg, l_m, w_m)
+    return exij, eyij, ax
 
 
 if "__main__" == __name__:
