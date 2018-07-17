@@ -138,9 +138,12 @@ def main():
     w_m = 1.83
 
     t_max = 10
-    theta_deg = 90
     R_m = 20
-    t, x, y, heading_deg = constant_radius_turning(t_max, R_m, final_angle_deg=theta_deg)
+
+    start_deg = 0
+    end_deg = 90
+
+    t, x, y, heading_deg = constant_radius_turning(t_max, R_m, initial_angle_deg=start_deg, final_angle_deg=end_deg)
 
     exij, eyij, ax = extrude(t, x, y, heading_deg, l_m, w_m)
 
