@@ -247,10 +247,13 @@ def main():
     ax.set_ylabel('y(m)')
     ax.set_zlabel('t(sec)')
 
-    filename = 'surface.svg'
+    filename = 'surface.png'
     if os.path.exists(filename):
         os.remove(filename)
-    plt.savefig(filename)
+    if ".svg" == os.path.splitext(filename)[-1]:
+        plt.savefig(filename)
+    elif '.png' == os.path.splitext(filename)[-1]:
+        plt.savefig(filename, dpi=300)
     if os.path.exists(filename):
         print('saved to %s' % filename)
     else:
