@@ -209,6 +209,10 @@ def main():
 
     # Trajectory radius
     R_m = 20
+    # Indicate trajectory radius
+    print('R_m = %g' % R_m)
+    # Indicate trajectory arc length
+    print('90 degree arc length = %g' % (R_m * np.pi / 2))
 
     # First duct
     exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=90,)
