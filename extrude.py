@@ -46,41 +46,53 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
 
     """
 
-    # Time steps
+    # Time steps in column vector
     t_vec = np.matrix([t_sec]).T
 
     # Reference coordinates at each time step
+    # in column vector
     rx_vec = np.matrix([x_m]).T
     ry_vec = np.matrix([y_m]).T
 
     # Heading angle at each time step
     heading_rad = np.deg2rad(h_deg)
 
-    # Foot print relative coordinate
-
+    # Footprint relative coordinates
     if isinstance(footprint_x, (int, float)) and isinstance(footprint_y, (int, float)):
         footprint_x, footprint_y = get_rect_footprint(footprint_x, footprint_y)
 
+    # In row vectors
     fx_vec = np.matrix([footprint_x])
     fy_vec = np.matrix([footprint_y])
 
+    # Direction cosines to rotate the footprint at each time step
+    # In column vectors
     c_vec = np.matrix(np.cos(heading_rad)).T
     s_vec = np.matrix(np.sin(heading_rad)).T
+
+    # To repeat in column direction
+    # May consider numpy.tile() as an alternative
+    # https://docs.scipy.org/doc/numpy/reference/generated/numpy.tile.html#numpy.tile
     one_vec = np.ones_like(fx_vec)
 
-    # Foot print with rotation at each time step
+    # Footprint with rotation at each time step
+    # [xs] = [cos, -sin][fx] + [x]
+    # [ys]   [sin,  cos][fy]   [y]
     exij = c_vec * fx_vec - s_vec * fy_vec + rx_vec * one_vec
     eyij = s_vec * fx_vec + c_vec * fy_vec + ry_vec * one_vec
 
     # Repeat time step
     tij = t_vec * one_vec
 
-    # plot
+    # Prepare 3D axis if necessary
     if ax is None:
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111, projection='3d')
 
     # https://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
+    # To make it easy to calculate which surface is closer to the point of view,
+    # slice the duct at each time step and plot as a separate surface.
+    # Would be possible to parallelize.
     for step in range(exij.shape[0] - 1):
         ax.plot_surface(exij[step:(step+2), :], 
                         eyij[step:(step+2), :], 
