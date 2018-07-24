@@ -2,7 +2,7 @@
 Extrusion plot based on matplotlib
 
 ## 설명<br>Description
-`extrude.py` 안의 `extrude()` 함수는 임의의 2차원 형상을 3차원 압출한 형태의 곡면을 그림.
+`extrude.py` 안의 `extrude()` 함수는 임의의 2차원 형상을 3차원 압출한 형태의 곡면을 그림.<br>
 `extrude()` function in `extrude.py` plots a surface that is an extrusion of a 2D shape, not necessarily a closed polygon.
 
 ## 알림<br>Acknowledgement
