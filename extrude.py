@@ -236,7 +236,7 @@ def main():
 
     # Adjust view points
     azim = (0.46875+15.234375)*0.5
-    print('axim =', azim)
+    print('azim =', azim)
 
     # https://stackoverflow.com/questions/12904912/how-to-set-camera-position-for-3d-plots-using-python-matplotlib
     ax.view_init(elev=30., azim=azim)
