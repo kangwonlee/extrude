@@ -252,6 +252,9 @@ def main():
 
 
 def helix(l_m, w_m, t_max, R_m, start_deg, end_deg, ax=None):
+    """
+    Plots a helix centered at (0, 0)
+    """
     t, x, y, heading_deg = constant_radius_turning(t_max, R_m, initial_angle_deg=start_deg, final_angle_deg=end_deg)
 
     exij, eyij, ax = extrude(t, x, y, heading_deg, l_m, w_m, ax=ax)
