@@ -204,15 +204,21 @@ def main():
     l_m = 4.8
     w_m = 1.83
 
-    # Max simulation time
-    t_max = 10
-
     # Trajectory radius
     R_m = 20
-    # Indicate trajectory radius
+
+    # Max simulation time
+    # V = 10 km/hr
+    t_max = ((R_m * np.pi / 2) * 3.6 / 10)
+
+    # Indicate simulation time
+    print('t = %g (sec)' % t_max)
+
+    # Indicate radius
     print('R_m = %g' % R_m)
     # Indicate trajectory arc length
     print('90 degree arc length = %g' % (R_m * np.pi / 2))
+    # Indicate speed
     print('speed = %g (m/s)' %  ((R_m * np.pi / 2) / t_max))
     print('speed = %g (km/hr)' %  ((R_m * np.pi / 2) * 3.6 / t_max))
 
