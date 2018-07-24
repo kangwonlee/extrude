@@ -11,7 +11,7 @@ class BaseTestExtrude(unittest.TestCase):
 
     def assertArrayEqual(self, x, y):
         # check norm small enough
-        return self.assertLess(float(nl.norm(x - y)), BaseTestExtrude.epsilon)
+        return self.assertLess(float(nl.norm(x - y)), BaseTestExtrude.epsilon, '\nx = %r\ny = %r' % (x, y))
 
 
 class TestExtrude(BaseTestExtrude):
