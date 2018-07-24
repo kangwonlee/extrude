@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
+import os
 
 
 def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None, color='orange'):
@@ -203,11 +204,23 @@ def main():
     l_m = 4.8
     w_m = 1.83
 
-    # Max simulation time
-    t_max = 10
-
     # Trajectory radius
     R_m = 20
+
+    # Max simulation time
+    # V = 10 km/hr
+    t_max = ((R_m * np.pi / 2) * 3.6 / 10)
+
+    # Indicate simulation time
+    print('t = %g (sec)' % t_max)
+
+    # Indicate radius
+    print('R_m = %g' % R_m)
+    # Indicate trajectory arc length
+    print('90 degree arc length = %g' % (R_m * np.pi / 2))
+    # Indicate speed
+    print('speed = %g (m/s)' %  ((R_m * np.pi / 2) / t_max))
+    print('speed = %g (km/hr)' %  ((R_m * np.pi / 2) * 3.6 / t_max))
 
     # First duct
     exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=90,)
@@ -236,7 +249,7 @@ def main():
 
     # Adjust view points
     azim = (0.46875+15.234375)*0.5
-    print('axim =', azim)
+    print('azim =', azim)
 
     # https://stackoverflow.com/questions/12904912/how-to-set-camera-position-for-3d-plots-using-python-matplotlib
     ax.view_init(elev=30., azim=azim)
@@ -246,9 +259,17 @@ def main():
     ax.set_ylabel('y(m)')
     ax.set_zlabel('t(sec)')
 
-    filename = 'surface.svg'
-    print(filename)
-    plt.savefig(filename)
+    filename = 'surface.png'
+    if os.path.exists(filename):
+        os.remove(filename)
+    if ".svg" == os.path.splitext(filename)[-1]:
+        plt.savefig(filename)
+    elif '.png' == os.path.splitext(filename)[-1]:
+        plt.savefig(filename, dpi=300)
+    if os.path.exists(filename):
+        print('saved to %s' % filename)
+    else:
+        raise Warning('Unable to save to %s' % filename)
 
 
 def helix(l_m, w_m, t_max, R_m, start_deg, end_deg, ax=None):
