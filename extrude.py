@@ -123,7 +123,7 @@ def get_rect_footprint(l_m, w_m):
 
 def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=0, final_angle_deg=90,):
     """
-    Generate reference trajectory of constant radius turning centered at (0, 0), starting at (R, 0)
+    Generate reference trajectory of constant radius turning centered at (0, 0), starting at (R, 0) if initial angle is 0 degree.
 
     Arguments
     =========
@@ -158,6 +158,25 @@ def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=
 
 
 def axis_equal_xy(exij, eyij):
+    """
+    axis('equal') for a 3D axis
+
+    For matplotlib 3D axis, axis('equal') seems working differently then expected
+    Hence created one similar to it.
+
+    If plot contains multiple plots, please use numpy.hstack() (or numpy.vstack()) 
+    to collect all x y coordinates of the surfaces
+
+    Example: multiple surface case
+    ==============================
+    >>> import numpy.random as nr
+    >>> exij0, exij2, exij3, exij4 = nr.random((10, 10)), nr.random((10, 10)), nr.random((10, 10)), nr.random((10, 10))
+    >>> eyij0, eyij2, eyij3, eyij4 = nr.random((10, 10)), nr.random((10, 10)), nr.random((10, 10)), nr.random((10, 10))
+    >>> exij = np.hstack((exij0, exij2, exij3, exij4,)) # assume these are from multiple surfaces
+    >>> eyij = np.hstack((eyij0, eyij2, eyij3, eyij4,))
+    >>> axis_equal_xy(exij, eyij)
+    """
+
     # Extremums in x, y coordinates
     x_min, x_max = min(exij.flatten().tolist()[0]), max(exij.flatten().tolist()[0])
     y_min, y_max = min(eyij.flatten().tolist()[0]), max(eyij.flatten().tolist()[0])
