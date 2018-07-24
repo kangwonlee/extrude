@@ -103,6 +103,18 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
 
 
 def get_rect_footprint(l_m, w_m):
+    """
+    Get rectangular footprint of length (x, longitudinal direction) and width (y, lateral direction)
+
+    l_m : length
+    w_m : width
+
+    Return Values
+    =============
+    footprint_x : tuple of x coordinates of the footprint
+    footprint_y : tuple of y coordinates of the footprint
+
+    """
     l_half_m = l_m * 0.5
     w_half_m = w_m * 0.5
     footprint_x, footprint_y = zip((l_half_m, w_half_m), (-l_half_m, w_half_m), (-l_half_m, -w_half_m), (l_half_m, -w_half_m), (l_half_m, w_half_m))
