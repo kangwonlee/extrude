@@ -11,7 +11,7 @@ class BaseTestExtrude(unittest.TestCase):
 
     def assertArrayEqual(self, x, y):
         # check norm small enough
-        return self.assertLess(float(nl.norm(x - y)), BaseTestExtrude.epsilon)
+        return self.assertLess(float(nl.norm(x - y)), BaseTestExtrude.epsilon, '\nx = %r\ny = %r' % (x, y))
 
 
 class TestExtrude(BaseTestExtrude):
@@ -50,6 +50,14 @@ class TestExtrude(BaseTestExtrude):
 
         self.assertAlmostEqual(2*(x**2 + y**2)**0.5, (dx**2 + dy**2)**0.5)
 
+    def test_get_rect_footprint_default(self):
+        result_x, result_y = extrude.get_rect_footprint()
+
+        points = np.array(tuple(zip(result_x, result_y)))
+        for i in range(points.shape[0] - 1):
+            vec_i = points[i + 1, :] - points[i, :]
+            vec_j = points[i - 1, :] - points[i, :]
+            self.assertLess(np.dot(vec_i, vec_j), BaseTestExtrude.epsilon)
 
     def test_constant_radius_turning(self):
         t_max = 1.0
@@ -62,6 +70,26 @@ class TestExtrude(BaseTestExtrude):
 
         for xi, yi, theta_i_deg in zip(x, y, heading_deg_array):
             self.assertAlmostEqual(np.deg2rad(theta_i_deg - 90), np.arctan2(yi, xi))
+
+    def test_get_extrusion_coordinates_default_footprint(self):
+        t_sec = (0, 1)
+        x_m = (0, 1)
+        y_m = (1, 0)
+        
+        h_deg = (0, 90)
+
+        result = extrude.get_extrusion_coordinates(t_sec, x_m, y_m, h_deg)
+
+        expected_x = np.matrix([[ 2.4  , -2.4  , -2.4  ,  2.4  ,  2.4  ],
+                                [ 0.085,  0.085,  1.915,  1.915,  0.085]])
+        expected_y = np.matrix([[ 1.915,  1.915,  0.085,  0.085,  1.915],
+                                [ 2.4  , -2.4  , -2.4  ,  2.4  ,  2.4  ]])
+        expected_t = np.matrix([[0., 0., 0., 0., 0.0],
+                                [1., 1., 1., 1., 1.0]])
+
+        self.assertArrayEqual(expected_x, result[0])
+        self.assertArrayEqual(expected_y, result[1])
+        self.assertArrayEqual(expected_t, result[2])
 
 
 if "__main__" == __name__:
