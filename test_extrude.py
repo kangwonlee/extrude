@@ -49,7 +49,20 @@ class TestExtrude(BaseTestExtrude):
         dy = result_y[2] - result_y[0]
 
         self.assertAlmostEqual(2*(x**2 + y**2)**0.5, (dx**2 + dy**2)**0.5)
-        
+
+
+    def test_constant_radius_turning(self):
+        t_max = 1.0
+        t_sample = 0.1
+        R = 2.0
+        t, x, y, heading_deg_array = extrude.constant_radius_turning(t_max, R, t_sample_sec=t_sample, initial_angle_deg=0, central_angle_deg=90,)
+    
+        self.assertAlmostEqual(t[-1], t_max)
+        self.assertAlmostEqual(t[1] - t[0], t_sample)
+
+        for xi, yi, theta_i_deg in zip(x, y, heading_deg_array):
+            self.assertAlmostEqual(np.deg2rad(theta_i_deg - 90), np.arctan2(yi, xi))
+
 
 if "__main__" == __name__:
     unittest.main()
