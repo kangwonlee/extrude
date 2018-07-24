@@ -48,6 +48,28 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
     """
 
     # Time steps in column vector
+    exij, eyij, tij = get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y)
+
+    # Prepare 3D axis if necessary
+    if ax is None:
+        fig = plt.figure(figsize=(10, 10))
+        ax = fig.add_subplot(111, projection='3d')
+
+    # https://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
+    # To make it easy to calculate which surface is closer to the point of view,
+    # slice the duct at each time step and plot as a separate surface.
+    # Would be possible to parallelize.
+    for step in range(exij.shape[0] - 1):
+        ax.plot_surface(exij[step:(step+2), :], 
+                        eyij[step:(step+2), :], 
+                        tij[step:(step+2), :], 
+                        alpha=alpha, color=color)
+
+    return exij, eyij, ax
+
+
+def get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
+    # Time steps in column vector
     t_vec = np.matrix([t_sec]).T
 
     # Reference coordinates at each time step
@@ -84,23 +106,7 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
 
     # Repeat time step
     tij = t_vec * one_vec
-
-    # Prepare 3D axis if necessary
-    if ax is None:
-        fig = plt.figure(figsize=(10, 10))
-        ax = fig.add_subplot(111, projection='3d')
-
-    # https://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
-    # To make it easy to calculate which surface is closer to the point of view,
-    # slice the duct at each time step and plot as a separate surface.
-    # Would be possible to parallelize.
-    for step in range(exij.shape[0] - 1):
-        ax.plot_surface(exij[step:(step+2), :], 
-                        eyij[step:(step+2), :], 
-                        tij[step:(step+2), :], 
-                        alpha=alpha, color=color)
-
-    return exij, eyij, ax
+    return exij, eyij, tij
 
 
 def get_rect_footprint(l_m, w_m):
