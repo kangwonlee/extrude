@@ -213,6 +213,8 @@ def main():
     print('R_m = %g' % R_m)
     # Indicate trajectory arc length
     print('90 degree arc length = %g' % (R_m * np.pi / 2))
+    print('speed = %g (m/s)' %  ((R_m * np.pi / 2) / t_max))
+    print('speed = %g (km/hr)' %  ((R_m * np.pi / 2) * 3.6 / t_max))
 
     # First duct
     exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=90,)
