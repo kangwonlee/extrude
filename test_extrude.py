@@ -50,6 +50,14 @@ class TestExtrude(BaseTestExtrude):
 
         self.assertAlmostEqual(2*(x**2 + y**2)**0.5, (dx**2 + dy**2)**0.5)
 
+    def test_get_rect_footprint_default(self):
+        result_x, result_y = extrude.get_rect_footprint()
+
+        points = np.array(tuple(zip(result_x, result_y)))
+        for i in range(points.shape[0] - 1):
+            vec_i = points[i + 1, :] - points[i, :]
+            vec_j = points[i - 1, :] - points[i, :]
+            self.assertLess(np.dot(vec_i, vec_j), BaseTestExtrude.epsilon)
 
     def test_constant_radius_turning(self):
         t_max = 1.0
