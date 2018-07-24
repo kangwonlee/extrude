@@ -71,6 +71,26 @@ class TestExtrude(BaseTestExtrude):
         for xi, yi, theta_i_deg in zip(x, y, heading_deg_array):
             self.assertAlmostEqual(np.deg2rad(theta_i_deg - 90), np.arctan2(yi, xi))
 
+    def test_get_extrusion_coordinates_default_footprint(self):
+        t_sec = (0, 1)
+        x_m = (0, 1)
+        y_m = (1, 0)
+        
+        h_deg = (0, 90)
+
+        result = extrude.get_extrusion_coordinates(t_sec, x_m, y_m, h_deg)
+
+        expected_x = np.matrix([[ 2.4  , -2.4  , -2.4  ,  2.4  ,  2.4  ],
+                                [ 0.085,  0.085,  1.915,  1.915,  0.085]])
+        expected_y = np.matrix([[ 1.915,  1.915,  0.085,  0.085,  1.915],
+                                [ 2.4  , -2.4  , -2.4  ,  2.4  ,  2.4  ]])
+        expected_t = np.matrix([[0., 0., 0., 0., 0.0],
+                                [1., 1., 1., 1., 1.0]])
+
+        self.assertArrayEqual(expected_x, result[0])
+        self.assertArrayEqual(expected_y, result[1])
+        self.assertArrayEqual(expected_t, result[2])
+
 
 if "__main__" == __name__:
     unittest.main()
