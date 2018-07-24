@@ -54,8 +54,8 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x=None, footprint_y=None, alpha=0.
 
     # Prepare 3D axis if necessary
     if ax is None:
-        fig = plt.figure(figsize=(10, 10))
-        ax = fig.add_subplot(111, projection='3d')
+        x_size, y_size = 10, 10
+        _, ax = get_3d_axis(x_size, y_size)
 
     # https://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
     # To make it easy to calculate which surface is closer to the point of view,
@@ -68,6 +68,16 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x=None, footprint_y=None, alpha=0.
                         alpha=alpha, color=color)
 
     return exij, eyij, ax
+
+
+def get_3d_axis(x_size=10, y_size=10):
+    """
+    Initialize a subplot with size of (10, 10)
+    """
+
+    fig = plt.figure(figsize=(x_size, y_size))
+    ax = fig.add_subplot(111, projection='3d')
+    return fig, ax
 
 
 def get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x=None, footprint_y=None):
