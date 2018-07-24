@@ -11,9 +11,20 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
     x_m : x coordinates of refernce point
     y_m : y coordinates of refernce point
 
-    h_deg : heading angles at each time step
-    footprint_x : footprint x coordinates w. r. t. (0, 0)
-    footprint_y : footprint y coordinates w. r. t. (0, 0)
+    h_deg : Heading angles at each time step
+    footprint_x : Footprint x coordinates w. r. t. (0, 0)
+    footprint_y : Footprint y coordinates w. r. t. (0, 0)
+
+    alpha : Transparency level (default 0.7)
+    ax : Axis capable of 3D plotting. Would make one of None. (default None)
+    color : Surface fill color (default 'orange')
+
+    Return Values
+    =============
+    exij : Surface x coordinates
+    eyij : Surface y coordinates
+    tij : Surface z coordinates
+    ax : matplotlib 3D axis
 
     Example
     =======
@@ -22,11 +33,16 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
     >>> w_m = 1.83
     >>> l_half_m = l_m * 0.5
     >>> w_half_m = w_m * 0.5
-    >>> footprint_x, footprint_y = zip((l_m, w_half_m), (-l_m, w_half_m), (-l_m, -w_half_m), (l_m, -w_half_m), (l_m, w_half_m))
+    >>> footprint_x, footprint_y = zip((l_half_m, w_half_m), 
+                                       (-l_half_m, w_half_m), 
+                                       (-l_half_m, -w_half_m), 
+                                       (l_half_m, -w_half_m), 
+                                       (l_half_m, w_half_m))
     >>> t = np.arange(0, 10.01, 0.1)
     >>> x = np.arange(0, len(t)+0.1)
     >>> y = np.zeros_like(t)
     >>> heading_deg = np.linspace(0, 60, len(t))
+    >>> exij, eyij, ax = extrude(t, x, y, heading_deg, footprint_x, footprint_y)
 
     """
 
