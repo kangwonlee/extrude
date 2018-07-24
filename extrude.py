@@ -4,7 +4,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import os
 
 
-def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None, color='orange'):
+def extrude(t_sec, x_m, y_m, h_deg, footprint_x=None, footprint_y=None, alpha=0.7, ax=None, color='orange'):
     """
     Extrude footprint along the x y t coordinates
 
@@ -13,8 +13,10 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
     y_m : y coordinates of refernce point
 
     h_deg : Heading angles at each time step
-    footprint_x : Footprint x coordinates w. r. t. (0, 0)
-    footprint_y : Footprint y coordinates w. r. t. (0, 0)
+
+    footprint_x : Footprint x coordinates w. r. t. (0, 0). (default None)
+    footprint_y : Footprint y coordinates w. r. t. (0, 0). (default None)
+    If any of above two is None, would generate a default rectangular footprint
 
     alpha : Transparency level (default 0.7)
     ax : Axis capable of 3D plotting. Would make one of None. (default None)
@@ -52,8 +54,8 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
 
     # Prepare 3D axis if necessary
     if ax is None:
-        fig = plt.figure(figsize=(10, 10))
-        ax = fig.add_subplot(111, projection='3d')
+        x_size, y_size = 10, 10
+        _, ax = get_3d_axis(x_size, y_size)
 
     # https://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
     # To make it easy to calculate which surface is closer to the point of view,
@@ -66,6 +68,16 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
                         alpha=alpha, color=color)
 
     return exij, eyij, ax
+
+
+def get_3d_axis(x_size=10, y_size=10):
+    """
+    Initialize a subplot with size of (10, 10)
+    """
+
+    fig = plt.figure(figsize=(x_size, y_size))
+    ax = fig.add_subplot(111, projection='3d')
+    return fig, ax
 
 
 def get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x=None, footprint_y=None):
