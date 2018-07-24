@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
+import os
 
 
 def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None, color='orange'):
@@ -47,6 +48,66 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
     """
 
     # Time steps in column vector
+    exij, eyij, tij = get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y)
+
+    # Prepare 3D axis if necessary
+    if ax is None:
+        fig = plt.figure(figsize=(10, 10))
+        ax = fig.add_subplot(111, projection='3d')
+
+    # https://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
+    # To make it easy to calculate which surface is closer to the point of view,
+    # slice the duct at each time step and plot as a separate surface.
+    # Would be possible to parallelize.
+    for step in range(exij.shape[0] - 1):
+        ax.plot_surface(exij[step:(step+2), :], 
+                        eyij[step:(step+2), :], 
+                        tij[step:(step+2), :], 
+                        alpha=alpha, color=color)
+
+    return exij, eyij, ax
+
+
+def get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
+    """
+    Get coordinates of extrude surface of footprint along the x y t coordinates
+
+    t_sec : t (z) coordinates of refernce point
+    x_m : x coordinates of refernce point
+    y_m : y coordinates of refernce point
+
+    h_deg : Heading angles at each time step
+    footprint_x : Footprint x coordinates w. r. t. (0, 0)
+    footprint_y : Footprint y coordinates w. r. t. (0, 0)
+
+    Return Values
+    =============
+    exij : Surface x coordinates
+    eyij : Surface y coordinates
+    tij : Surface z coordinates
+    ax : matplotlib 3D axis
+
+    Example
+    =======
+    >>> import numpy as np
+    >>> l_m = 4.8
+    >>> w_m = 1.83
+    >>> l_half_m = l_m * 0.5
+    >>> w_half_m = w_m * 0.5
+    >>> footprint_x, footprint_y = zip((l_half_m, w_half_m), 
+                                       (-l_half_m, w_half_m), 
+                                       (-l_half_m, -w_half_m), 
+                                       (l_half_m, -w_half_m), 
+                                       (l_half_m, w_half_m))
+    >>> t = np.arange(0, 10.01, 0.1)
+    >>> x = np.arange(0, len(t)+0.1)
+    >>> y = np.zeros_like(t)
+    >>> heading_deg = np.linspace(0, 60, len(t))
+    >>> exij, eyij, tij = get_extrusion_coordinates(t, x, y, heading_deg, footprint_x, footprint_y)
+
+    """
+
+    # Time steps in column vector
     t_vec = np.matrix([t_sec]).T
 
     # Reference coordinates at each time step
@@ -83,23 +144,7 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
 
     # Repeat time step
     tij = t_vec * one_vec
-
-    # Prepare 3D axis if necessary
-    if ax is None:
-        fig = plt.figure(figsize=(10, 10))
-        ax = fig.add_subplot(111, projection='3d')
-
-    # https://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
-    # To make it easy to calculate which surface is closer to the point of view,
-    # slice the duct at each time step and plot as a separate surface.
-    # Would be possible to parallelize.
-    for step in range(exij.shape[0] - 1):
-        ax.plot_surface(exij[step:(step+2), :], 
-                        eyij[step:(step+2), :], 
-                        tij[step:(step+2), :], 
-                        alpha=alpha, color=color)
-
-    return exij, eyij, ax
+    return exij, eyij, tij
 
 
 def get_rect_footprint(l_m, w_m):
@@ -121,7 +166,7 @@ def get_rect_footprint(l_m, w_m):
     return footprint_x, footprint_y
 
 
-def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=0, final_angle_deg=90,):
+def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=0, central_angle_deg=90,):
     """
     Generate reference trajectory of constant radius turning centered at (0, 0), starting at (R, 0) if initial angle is 0 degree.
 
@@ -131,7 +176,7 @@ def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=
     R_m : Turning radius
     t_sample_sec : Sampling time
     initial_angle_deg : Start point angle
-    final_angle_deg : Angular length
+    central_angle_deg : Angle between the start and end points of the trajectory around the vertical axis
 
     Return Values
     =============
@@ -144,7 +189,7 @@ def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=
     t = np.arange(0, t_max_sec + t_sample_sec * 0.5, t_sample_sec)
 
     # Angle arrays
-    theta_deg_array = np.linspace(initial_angle_deg, initial_angle_deg+final_angle_deg, len(t))
+    theta_deg_array = np.linspace(initial_angle_deg, initial_angle_deg+central_angle_deg, len(t))
     theta_rad_array = np.deg2rad(theta_deg_array)
 
     # Heading angle in degree
@@ -203,28 +248,40 @@ def main():
     l_m = 4.8
     w_m = 1.83
 
-    # Max simulation time
-    t_max = 10
-
     # Trajectory radius
     R_m = 20
 
+    # Max simulation time
+    # V = 10 km/hr
+    t_max = ((R_m * np.pi / 2) * 3.6 / 10)
+
+    # Indicate simulation time
+    print('t = %g (sec)' % t_max)
+
+    # Indicate radius
+    print('R_m = %g' % R_m)
+    # Indicate trajectory arc length
+    print('90 degree arc length = %g' % (R_m * np.pi / 2))
+    # Indicate speed
+    print('speed = %g (m/s)' %  ((R_m * np.pi / 2) / t_max))
+    print('speed = %g (km/hr)' %  ((R_m * np.pi / 2) * 3.6 / t_max))
+
     # First duct
-    exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=90,)
+    exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, central_angle_deg=90,)
 
     # Second duct
-    t2, x2, y2, heading_deg2 = constant_radius_turning(t_max, R_m, initial_angle_deg=90, final_angle_deg=90)
+    t2, x2, y2, heading_deg2 = constant_radius_turning(t_max, R_m, initial_angle_deg=90, central_angle_deg=90)
     x2 += R_m
     exij2, eyij2, _ = extrude(t2, x2, y2, heading_deg2, l_m, w_m, ax=ax, color='red')
 
     # Third duct
-    t3, x3, y3, heading_deg3 = constant_radius_turning(t_max, R_m, initial_angle_deg=180, final_angle_deg=90)
+    t3, x3, y3, heading_deg3 = constant_radius_turning(t_max, R_m, initial_angle_deg=180, central_angle_deg=90)
     x3 += R_m
     y3 += R_m
     exij3, eyij3, _ = extrude(t3, x3, y3, heading_deg3, l_m, w_m, ax=ax, color='green')
 
     # Fourth duct
-    t4, x4, y4, heading_deg4 = constant_radius_turning(t_max, R_m, initial_angle_deg=270, final_angle_deg=90)
+    t4, x4, y4, heading_deg4 = constant_radius_turning(t_max, R_m, initial_angle_deg=270, central_angle_deg=90)
     y4 += R_m
     exij4, eyij4, _ = extrude(t4, x4, y4, heading_deg4, l_m, w_m, ax=ax, color='blue')
 
@@ -236,7 +293,7 @@ def main():
 
     # Adjust view points
     azim = (0.46875+15.234375)*0.5
-    print('axim =', azim)
+    print('azim =', azim)
 
     # https://stackoverflow.com/questions/12904912/how-to-set-camera-position-for-3d-plots-using-python-matplotlib
     ax.view_init(elev=30., azim=azim)
@@ -246,16 +303,24 @@ def main():
     ax.set_ylabel('y(m)')
     ax.set_zlabel('t(sec)')
 
-    filename = 'surface.svg'
-    print(filename)
-    plt.savefig(filename)
+    filename = 'surface.png'
+    if os.path.exists(filename):
+        os.remove(filename)
+    if ".svg" == os.path.splitext(filename)[-1]:
+        plt.savefig(filename)
+    elif '.png' == os.path.splitext(filename)[-1]:
+        plt.savefig(filename, dpi=300)
+    if os.path.exists(filename):
+        print('saved to %s' % filename)
+    else:
+        raise Warning('Unable to save to %s' % filename)
 
 
-def helix(l_m, w_m, t_max, R_m, start_deg, end_deg, ax=None):
+def helix(l_m, w_m, t_max, R_m, start_deg, central_angle_deg, ax=None):
     """
     Plots a helix centered at (0, 0)
     """
-    t, x, y, heading_deg = constant_radius_turning(t_max, R_m, initial_angle_deg=start_deg, final_angle_deg=end_deg)
+    t, x, y, heading_deg = constant_radius_turning(t_max, R_m, initial_angle_deg=start_deg, central_angle_deg=central_angle_deg)
 
     exij, eyij, ax = extrude(t, x, y, heading_deg, l_m, w_m, ax=ax)
     return exij, eyij, ax
