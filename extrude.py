@@ -68,7 +68,7 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
     return exij, eyij, ax
 
 
-def get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
+def get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x=None, footprint_y=None):
     """
     Get coordinates of extrude surface of footprint along the x y t coordinates
 
@@ -77,8 +77,10 @@ def get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
     y_m : y coordinates of refernce point
 
     h_deg : Heading angles at each time step
-    footprint_x : Footprint x coordinates w. r. t. (0, 0)
-    footprint_y : Footprint y coordinates w. r. t. (0, 0)
+
+    footprint_x : Footprint x coordinates w. r. t. (0, 0). (default None)
+    footprint_y : Footprint y coordinates w. r. t. (0, 0). (default None)
+    If any of above to is missing, use a default rectangular footprint.
 
     Return Values
     =============
@@ -117,6 +119,10 @@ def get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
 
     # Heading angle at each time step
     heading_rad = np.deg2rad(h_deg)
+
+    # If any of footprint argument missing, use default one.
+    if (footprint_x is None) or (footprint_y is None):
+        footprint_x, footprint_y = get_rect_footprint()
 
     # Footprint relative coordinates
     if isinstance(footprint_x, (int, float)) and isinstance(footprint_y, (int, float)):
