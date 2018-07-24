@@ -147,12 +147,12 @@ def get_extrusion_coordinates(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y):
     return exij, eyij, tij
 
 
-def get_rect_footprint(l_m, w_m):
+def get_rect_footprint(l_m=4.8, w_m=1.83):
     """
     Get rectangular footprint of length (x, longitudinal direction) and width (y, lateral direction)
 
-    l_m : length
-    w_m : width
+    l_m : length (default 4.8)
+    w_m : width (default 1.83)
 
     Return Values
     =============
