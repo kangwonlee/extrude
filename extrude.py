@@ -4,7 +4,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import os
 
 
-def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None, color='orange'):
+def extrude(t_sec, x_m, y_m, h_deg, footprint_x=None, footprint_y=None, alpha=0.7, ax=None, color='orange'):
     """
     Extrude footprint along the x y t coordinates
 
@@ -13,8 +13,10 @@ def extrude(t_sec, x_m, y_m, h_deg, footprint_x, footprint_y, alpha=0.7, ax=None
     y_m : y coordinates of refernce point
 
     h_deg : Heading angles at each time step
-    footprint_x : Footprint x coordinates w. r. t. (0, 0)
-    footprint_y : Footprint y coordinates w. r. t. (0, 0)
+
+    footprint_x : Footprint x coordinates w. r. t. (0, 0). (default None)
+    footprint_y : Footprint y coordinates w. r. t. (0, 0). (default None)
+    If any of above two is None, would generate a default rectangular footprint
 
     alpha : Transparency level (default 0.7)
     ax : Axis capable of 3D plotting. Would make one of None. (default None)
