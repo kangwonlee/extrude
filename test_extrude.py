@@ -38,6 +38,18 @@ class TestExtrude(BaseTestExtrude):
         self.assertArrayEqual(expected_y, result[1])
         self.assertArrayEqual(expected_t, result[2])
 
+    def test_get_rect_footprint(self):
+        x = 2
+        y = 1
+        result_x, result_y = extrude.get_rect_footprint(2*x, 2*y)
+        self.assertAlmostEqual(2 * x, max(result_x) - min(result_x))
+        self.assertAlmostEqual(2 * y, max(result_y) - min(result_y))
+
+        dx = result_x[2] - result_x[0]
+        dy = result_y[2] - result_y[0]
+
+        self.assertAlmostEqual(2*(x**2 + y**2)**0.5, (dx**2 + dy**2)**0.5)
+        
 
 if "__main__" == __name__:
     unittest.main()
