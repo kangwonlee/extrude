@@ -199,38 +199,49 @@ def axis_equal_xy(exij, eyij):
 
 def main():
 
+    # Size of a possible vehicle
     l_m = 4.8
     w_m = 1.83
 
+    # Max simulation time
     t_max = 10
+
+    # Trajectory radius
     R_m = 20
 
+    # First duct
     exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=90,)
 
+    # Second duct
     t2, x2, y2, heading_deg2 = constant_radius_turning(t_max, R_m, initial_angle_deg=90, final_angle_deg=90)
     x2 += R_m
     exij2, eyij2, _ = extrude(t2, x2, y2, heading_deg2, l_m, w_m, ax=ax, color='red')
 
+    # Third duct
     t3, x3, y3, heading_deg3 = constant_radius_turning(t_max, R_m, initial_angle_deg=180, final_angle_deg=90)
     x3 += R_m
     y3 += R_m
     exij3, eyij3, _ = extrude(t3, x3, y3, heading_deg3, l_m, w_m, ax=ax, color='green')
 
+    # Fourth duct
     t4, x4, y4, heading_deg4 = constant_radius_turning(t_max, R_m, initial_angle_deg=270, final_angle_deg=90)
     y4 += R_m
     exij4, eyij4, _ = extrude(t4, x4, y4, heading_deg4, l_m, w_m, ax=ax, color='blue')
 
+    # Adjust x y limits to include all surfaces
     exij = np.hstack((exij0, exij2, exij3, exij4,))
     eyij = np.hstack((eyij0, eyij2, eyij3, eyij4,))
 
     axis_equal_xy(exij, eyij)
 
+    # Adjust view points
     azim = (0.46875+15.234375)*0.5
     print('axim =', azim)
 
     # https://stackoverflow.com/questions/12904912/how-to-set-camera-position-for-3d-plots-using-python-matplotlib
     ax.view_init(elev=30., azim=azim)
 
+    # Mark axes labels
     ax.set_xlabel('x(m)')
     ax.set_ylabel('y(m)')
     ax.set_zlabel('t(sec)')
