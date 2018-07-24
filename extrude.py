@@ -131,7 +131,7 @@ def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=
     R_m : Turning radius
     t_sample_sec : Sampling time
     initial_angle_deg : Start point angle
-    final_angle_deg : End point angle
+    final_angle_deg : Angular length
 
     Return Values
     =============
