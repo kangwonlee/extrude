@@ -122,7 +122,7 @@ def get_rect_footprint(l_m, w_m):
     return footprint_x, footprint_y
 
 
-def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=0, final_angle_deg=90,):
+def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=0, central_angle_deg=90,):
     """
     Generate reference trajectory of constant radius turning centered at (0, 0), starting at (R, 0) if initial angle is 0 degree.
 
@@ -132,7 +132,7 @@ def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=
     R_m : Turning radius
     t_sample_sec : Sampling time
     initial_angle_deg : Start point angle
-    final_angle_deg : Angular length
+    central_angle_deg : Angle between the start and end points of the trajectory around the vertical axis
 
     Return Values
     =============
@@ -145,7 +145,7 @@ def constant_radius_turning(t_max_sec, R_m, t_sample_sec=0.1, initial_angle_deg=
     t = np.arange(0, t_max_sec + t_sample_sec * 0.5, t_sample_sec)
 
     # Angle arrays
-    theta_deg_array = np.linspace(initial_angle_deg, initial_angle_deg+final_angle_deg, len(t))
+    theta_deg_array = np.linspace(initial_angle_deg, initial_angle_deg+central_angle_deg, len(t))
     theta_rad_array = np.deg2rad(theta_deg_array)
 
     # Heading angle in degree
@@ -223,21 +223,21 @@ def main():
     print('speed = %g (km/hr)' %  ((R_m * np.pi / 2) * 3.6 / t_max))
 
     # First duct
-    exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, end_deg=90,)
+    exij0, eyij0, ax = helix(l_m, w_m, t_max, R_m, start_deg=0, central_angle_deg=90,)
 
     # Second duct
-    t2, x2, y2, heading_deg2 = constant_radius_turning(t_max, R_m, initial_angle_deg=90, final_angle_deg=90)
+    t2, x2, y2, heading_deg2 = constant_radius_turning(t_max, R_m, initial_angle_deg=90, central_angle_deg=90)
     x2 += R_m
     exij2, eyij2, _ = extrude(t2, x2, y2, heading_deg2, l_m, w_m, ax=ax, color='red')
 
     # Third duct
-    t3, x3, y3, heading_deg3 = constant_radius_turning(t_max, R_m, initial_angle_deg=180, final_angle_deg=90)
+    t3, x3, y3, heading_deg3 = constant_radius_turning(t_max, R_m, initial_angle_deg=180, central_angle_deg=90)
     x3 += R_m
     y3 += R_m
     exij3, eyij3, _ = extrude(t3, x3, y3, heading_deg3, l_m, w_m, ax=ax, color='green')
 
     # Fourth duct
-    t4, x4, y4, heading_deg4 = constant_radius_turning(t_max, R_m, initial_angle_deg=270, final_angle_deg=90)
+    t4, x4, y4, heading_deg4 = constant_radius_turning(t_max, R_m, initial_angle_deg=270, central_angle_deg=90)
     y4 += R_m
     exij4, eyij4, _ = extrude(t4, x4, y4, heading_deg4, l_m, w_m, ax=ax, color='blue')
 
@@ -272,11 +272,11 @@ def main():
         raise Warning('Unable to save to %s' % filename)
 
 
-def helix(l_m, w_m, t_max, R_m, start_deg, end_deg, ax=None):
+def helix(l_m, w_m, t_max, R_m, start_deg, central_angle_deg, ax=None):
     """
     Plots a helix centered at (0, 0)
     """
-    t, x, y, heading_deg = constant_radius_turning(t_max, R_m, initial_angle_deg=start_deg, final_angle_deg=end_deg)
+    t, x, y, heading_deg = constant_radius_turning(t_max, R_m, initial_angle_deg=start_deg, central_angle_deg=central_angle_deg)
 
     exij, eyij, ax = extrude(t, x, y, heading_deg, l_m, w_m, ax=ax)
     return exij, eyij, ax
