@@ -1,7 +1,8 @@
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
-import os
 
 
 def extrude(t_sec, x_m, y_m, h_deg, footprint_x=None, footprint_y=None, alpha=0.7, ax=None, color='orange'):
