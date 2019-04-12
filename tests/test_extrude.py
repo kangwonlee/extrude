@@ -80,12 +80,12 @@ class TestExtrude(BaseTestExtrude):
 
         result = extrude.get_extrusion_coordinates(t_sec, x_m, y_m, h_deg)
 
-        expected_x = np.matrix([[ 2.4  , -2.4  , -2.4  ,  2.4  ,  2.4  ],
-                                [ 0.085,  0.085,  1.915,  1.915,  0.085]])
-        expected_y = np.matrix([[ 1.915,  1.915,  0.085,  0.085,  1.915],
-                                [ 2.4  , -2.4  , -2.4  ,  2.4  ,  2.4  ]])
-        expected_t = np.matrix([[0., 0., 0., 0., 0.0],
-                                [1., 1., 1., 1., 1.0]])
+        expected_x = np.array([[ 2.4  , -2.4  , -2.4  ,  2.4  ,  2.4  ], 
+                               [ 0.085,  0.085,  1.915,  1.915,  0.085]])
+        expected_y = np.array([[ 1.915,  1.915,  0.085,  0.085,  1.915], 
+                               [ 2.4  , -2.4  , -2.4  ,  2.4  ,  2.4  ]])
+        expected_t = np.array([[0., 0., 0., 0., 0.0], 
+                               [1., 1., 1., 1., 1.0]])
 
         self.assertArrayEqual(expected_x, result[0])
         self.assertArrayEqual(expected_y, result[1])
