@@ -91,6 +91,3 @@ install:
   - conda list
 
 script: python -m unittest tests/test_extrude.py
-notifications:
-    email:
-        - kangwon.lee.edu@gmail.com
